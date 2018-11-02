@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use \core\Session;
 use \Core\Database as DB;
 use App\Models\Users as USER;
 
@@ -25,7 +24,9 @@ class LoginController extends \Core\Controller
      */
     public function index() 
     {        
-        if ( Session::read('auth') || empty( Session::readSession('auth') ) ) 
+        $check = $this->session->read('auth');
+        
+        if ( ($check != null) )
         {
             $this->view( 'auth/login' );
         }

@@ -11,7 +11,7 @@
         <nav class="navbar navbar-dark bg-success">
             <div class="container">
                 <ul class="navbar-nav pull-xs-right text-xs-center">
-                    <?php if ( isset( $_SESSION['auth'] ) ) :?>
+                    <?php if ( !isset($_SESSION['auth'] ) ) :?>
                         <li class="nav-item">
                             <a class="nav-link" href="account/index">Mon compte</a>
                         </li>

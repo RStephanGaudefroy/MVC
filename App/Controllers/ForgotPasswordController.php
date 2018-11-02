@@ -76,18 +76,10 @@ class ForgotPasswordController extends \Core\Controller
      */
     private function confirm_token($id, $token) 
     {
-        /*
-        $user =App::getDB()->request("SELECT * FROM users WHERE id = ?", [$id]);
+        // use trait user here
 
-        if ($user && $user->token == $token)
-        {
-            $req = App::getDB()->add('UPDATE users SET token = NULL, confirmed_at = NOW() WHERE id = ?', [$user->id]); 
-            $auth = new Auth;
-            $auth->authLogin('auth', $user->email);
-            $this->view( 'home' );   
-        }
-        */
+        
 
-        $this->view( 'auth/login' );   
+        //$this->view( 'auth/login' );   
     }
 }

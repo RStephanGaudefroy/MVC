@@ -13,7 +13,7 @@ trait User
         if ($user && $user->token == $this->token)
         {
             $req = App::getDB()->add('UPDATE users SET token = NULL, confirmed_at = NOW() WHERE id = ?', [$user->id]); 
-            Session::write('auth', $user);
+            $session->write('auth', $user);
             return true;
         }
         return false;

@@ -19,7 +19,7 @@ class Session
     /**
      * Write key - value in $_SESSION
      */
-    public static function write($key, $value)
+    public function write($key, $value)
     {
         $_SESSION[$key] = $value;
     }
@@ -27,7 +27,7 @@ class Session
     /**
      * Read key - value in $_SESSION
      */
-    public static function read($key)
+    public function read($key)
     {
         return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
     }
@@ -35,7 +35,7 @@ class Session
     /**
      * Delete key in $_SESSION
      */
-    public static function delete($key)
+    public function delete($key)
     {
         unset($_SESSION[$key]);
     }
