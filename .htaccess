@@ -1,0 +1,11 @@
+RewriteEngine On
+Options +FollowSymLinks
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-REQUEST_FILENAME
+
+rewriteCond %{HTTP_HOST} = ^mvc.com
+rewriteRule ^(.*)$ http://www.mvc.com/$1 [R=301, L]
+
+RewriteRule ^(.+)$ index.php?url=$1 [QSA]
