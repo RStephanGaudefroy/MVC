@@ -4,15 +4,19 @@ namespace App\Controllers;
 
 use \Core\App;
 use \Core\Mail;
-use \Core\Auth;
 use App\Models\Users as USER;
 
+
 class RegisterController extends \Core\Controller
-{
+{        
+    use \User;
+    
     private $username;
     private $email;
     private $password;
     private $passwordConf;
+    private $id;
+    private $token;
     
     /**
      * Intitialize private variable of this class
@@ -49,9 +53,9 @@ class RegisterController extends \Core\Controller
                 'passwordConf' => $this->passwordConf
             ];
             
-            $response = USER::Validate($array_val);
+            //$response = USER::Validate($array_val);
             
-            if (!empty($response))
+            //if (!empty($response))
                 //$this->view( 'auth/register', ['errors' => $response ]);
 
             $this->register();
@@ -67,7 +71,7 @@ class RegisterController extends \Core\Controller
      * Send email content url confirmation login
      * @return View
      */
-    public function register() 
+    private function register() 
     {
         $hash = password_hash($this->password, PASSWORD_DEFAULT);
         $token = bin2hex(random_bytes(60));
@@ -81,7 +85,7 @@ class RegisterController extends \Core\Controller
         
         $user = App::getDB()->add("INSERT INTO users (username, email, passw, token) VALUES (:username, :email, :passw, :token)", $params);
  
-        $message = "Bonjour, afin d'initialiser votre compte merci de cliquer sur le lien suivant : \n\nhttp://192.168.100.100:8000/register/confirm_token/$user/{$token}";
+        $message = "Bonjour, afin d'initialiser votre compte merci de cliquer sur le lien suivant : \n\nhttp://192.168.100.100:8000/register/confirm_token/$user/$token";
 
         echo '<br>'.$message.'</br>'; // pour essai
         
@@ -91,23 +95,16 @@ class RegisterController extends \Core\Controller
     }
 
     /**
-     * Test token registration send by mail at user
-     * update field token to NULL in database 
+     * Receive link connetion from user
      * @return View
      */
     public function confirm_token($id, $token) 
     {
-        $user =App::getDB()->request("SELECT * FROM users WHERE id = ?", [$id]);
-
-        if ($user && $user->token == $token)
-        {
-            $req = App::getDB()->add('UPDATE users SET token = NULL, confirmed_at = NOW() WHERE id = ?', [$user->id]); 
-            $auth = new Auth;
-            $auth->authLogin('auth', $user->email);
-            $this->view( 'home' ); 
-            exit();  
-        }
-
-        $this->view( 'auth/login' );   
+        $this->id = $id;
+        $this->token = $token;
+        
+        $verif = $this->essai();
+        
+        $verif === true ? $this->view( 'home' ) : $this->view( 'auth/login' );
     }
 }

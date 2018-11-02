@@ -28,6 +28,11 @@ class Autoloader
         {
             require_once (ROOT . 'App/Models/' . $class. '.php');
         }
+
+        elseif (file_exists( ROOT . 'App/Trait/' . $class. '.php'))
+        {
+            require_once (ROOT . 'App/Trait/' . $class. '.php');
+        }
         
 
         elseif (file_exists( ROOT . $class. '.php'))

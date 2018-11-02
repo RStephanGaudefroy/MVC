@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Custom class session
+ * use singleton pattern
+ */
+
 namespace Core;
 
 class Session
@@ -14,7 +19,7 @@ class Session
     /**
      * Write key - value in $_SESSION
      */
-    public function writeSession($key, $value)
+    public static function write($key, $value)
     {
         $_SESSION[$key] = $value;
     }
@@ -22,7 +27,7 @@ class Session
     /**
      * Read key - value in $_SESSION
      */
-    public function readSession($key)
+    public static function read($key)
     {
         return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
     }
@@ -30,7 +35,7 @@ class Session
     /**
      * Delete key in $_SESSION
      */
-    public function deleteSession($key)
+    public static function delete($key)
     {
         unset($_SESSION[$key]);
     }

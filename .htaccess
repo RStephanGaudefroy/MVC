@@ -1,11 +1,7 @@
-RewriteEngine On
 Options +FollowSymLinks
 
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-REQUEST_FILENAME
+RewriteEngine on
 
-rewriteCond %{HTTP_HOST} = ^mvc.com
-rewriteRule ^(.*)$ http://www.mvc.com/$1 [R=301, L]
+RewriteBase /
 
-RewriteRule ^(.+)$ index.php?url=$1 [QSA]
+RewriteRule ^(.*)$ public/$1 [R=302,L]

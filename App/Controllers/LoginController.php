@@ -25,7 +25,7 @@ class LoginController extends \Core\Controller
      */
     public function index() 
     {        
-        if ( !Auth::authCheck() ) 
+        if ( Session::read('auth') || empty( Session::readSession('auth') ) ) 
         {
             $this->view( 'auth/login' );
         }
@@ -35,6 +35,7 @@ class LoginController extends \Core\Controller
         }
         
     }
+    
 
     /**
      * call method to verify data post from form login
@@ -66,7 +67,7 @@ class LoginController extends \Core\Controller
     /**
      * verify password and log user else return view login
      */
-    public function login()
+    private function login()
     {
         $params = [ $this->email ];
 
