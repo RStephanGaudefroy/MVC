@@ -5,7 +5,7 @@
  * use singleton pattern
  */
 
-namespace Core;
+namespace app\core;
 
 class Session
 {

@@ -1,4 +1,4 @@
-<?php include ROOT . 'App/Views/template/header.php'; ?>
+<?php include ROOT . 'app/views/template/header.php'; ?>
 
 <body>
     <div class="container">
@@ -10,15 +10,9 @@
                     <input type="password" name="password" class="form-control" placeholder="Mot de passe">
                     <input type="submit" value="Connexion" class="btn btn-success m-b-1">
                 </form>
+            <a class="nav-link" href="forgotPassword">Oubli mot de passe</a>
             </div>
         </div>
-        <?php 
-            if (isset($data) && !empty($data))
-            {
-                var_dump($data['errors']);
-                //echo '<div class="alert alert-danger"></div>';
-            }
-        ?>
     </div>
 </body>
 </html>

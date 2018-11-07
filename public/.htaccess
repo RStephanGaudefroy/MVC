@@ -1,6 +1,6 @@
 Options +FollowSymLinks
 
-RewriteEngine On 
+RewriteEngine on
 
 RewriteBase /
 

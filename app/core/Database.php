@@ -4,7 +4,7 @@
  * Class Database 
  * use design pattern singleton
  */
-namespace Core;
+namespace app\core;
 
 use PDO;
 

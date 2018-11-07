@@ -11,22 +11,28 @@
         <nav class="navbar navbar-dark bg-success">
             <div class="container">
                 <ul class="navbar-nav pull-xs-right text-xs-center">
-                    <?php if ( !isset($_SESSION['auth'] ) ) :?>
+                    <?php if ( !isset($_SESSION['auth'] ) || empty( $_SESSION['auth'] ) ) :?>
                         <li class="nav-item">
-                            <a class="nav-link" href="account/index">Mon compte</a>
+                            <a class="nav-link" href="register">s'inscrire</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="logout/logout">Déconnexion</a>
+                            <a class="nav-link" href="login">se connecter</a>
                         </li>
                     <?php else : ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="register/index">S'inscrire</a>
+                            <a class="nav-link" href="account">Mon compte</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="login/index">se connecter</a>
+                            <a class="nav-link" href="logout">Déconnexion</a>
                         </li> 
                     <?php endif; ?>
                 </ul>
             </div>
         </nav>
-
+        <?php
+            if (isset ( $_SESSION['success']) )
+            {
+                var_dump($_SESSION['success'] );
+                unset( $_SESSION['success'] );
+            }
+        ?>

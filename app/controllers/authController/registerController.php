@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Controllers;
+namespace app\controllers\authController;
 
-use \Core\App;
-use \Core\Mail;
-use App\Models\Users as USER;
+//use \Core\App;
+//use \Core\Mail;
+use app\models\Users as USER;
+use app\core\Validator;
 
-
-class RegisterController extends \Core\Controller
+class RegisterController extends \app\core\Controller
 {        
-    use \User;
+    use \app\traits\authTrait;
     
     private $username;
     private $email;
@@ -17,6 +17,7 @@ class RegisterController extends \Core\Controller
     private $passwordConf;
     private $id;
     private $token;
+    private $csrfToken;
     
     /**
      * Intitialize private variable of this class
@@ -27,6 +28,7 @@ class RegisterController extends \Core\Controller
         $this->email = htmlspecialchars($_REQUEST['email']); 
         $this->password = htmlspecialchars($_REQUEST['password']); 
         $this->passwordConf = htmlspecialchars($_REQUEST['passwordConf']); 
+        $this->csrfToken = $_REQUEST['csrfToken'];
     }
 
     /**
@@ -34,6 +36,7 @@ class RegisterController extends \Core\Controller
      */
     public function index() 
     {        
+        $this->generateCsrfToken();
         $this->view( 'auth/register' );
     }
 
@@ -45,24 +48,36 @@ class RegisterController extends \Core\Controller
         if ($_POST)
         {
             $this->init();
-            
+            $verifCsrf = $this->verifyCsrfToken();
+        
+            $rules = USER::getRules();
+
             $array_val = [
                 'username' => $this->username,
                 'email' => $this->email,
                 'password' => $this->password,
                 'passwordConf' => $this->passwordConf
             ];
-            
-            //$response = USER::Validate($array_val);
-            
-            //if (!empty($response))
-                //$this->view( 'auth/register', ['errors' => $response ]);
 
-            $this->register();
+            $validate = new Validator($array_val, $rules);
+            $errors = $validate->validate();
+            
+            if (!empty($errors)) 
+            {
+                $this->session->write('errors', $errors);
+                header( 'Location: /register');
+            }
+            else 
+            {
+                $this->register();
+                $this->session->write('success', 'un mail de confirmation à été envoyé pour valider votre compte');
+                header( 'Location: /login');
+                exit;
+            }
         }
         else
         {
-            $this->view( 'auth/register' );
+            header( 'Location: /register');;
         }
     }
 
@@ -83,15 +98,13 @@ class RegisterController extends \Core\Controller
             ':token'    => $token
         ];
         
-        $user = App::getDB()->add("INSERT INTO users (username, email, passw, token) VALUES (:username, :email, :passw, :token)", $params);
- 
+        $user = $this->DB->add("INSERT INTO users (username, email, passw, token) VALUES (:username, :email, :passw, :token)", $params);
+        
         $message = "Bonjour, afin d'initialiser votre compte merci de cliquer sur le lien suivant : \n\nhttp://192.168.100.100:8000/register/confirm_token/$user/$token";
 
         echo '<br>'.$message.'</br>'; // pour essai
         
-        $mail = new Mail("devphp@mailinator.com", "Confirmation de votre compte", $message);
-
-        $this->view( 'auth/login' );
+        //$mail = new Mail("devphp@mailinator.com", "Confirmation de votre compte", $message);
     }
 
     /**
@@ -103,8 +116,8 @@ class RegisterController extends \Core\Controller
         $this->id = $id;
         $this->token = $token;
         
-        $verif = $this->essai();
+        $verif = $this->validTokenByUser();
         
-        $verif === true ? $this->view( 'home' ) : $this->view( 'auth/login' );
+        $verif == true ? header( 'Location: /home') : header( 'Location: /login');
     }
 }
