@@ -41,7 +41,8 @@ class RegisterController extends \app\core\Controller
     }
 
     /**
-     * call method to verify data post from form register
+     * Method for verify data post from form register
+     * @return View
      */
     public function postRegister() 
     {
@@ -53,10 +54,10 @@ class RegisterController extends \app\core\Controller
             $rules = USER::getRules();
 
             $array_val = [
-                'username' => $this->username,
-                'email' => $this->email,
-                'password' => $this->password,
-                'passwordConf' => $this->passwordConf
+                'username'      => $this->username,
+                'email'         => $this->email,
+                'password'      => $this->password,
+                'passwordConf'  => $this->passwordConf
             ];
 
             $validate = new Validator($array_val, $rules);
@@ -70,7 +71,6 @@ class RegisterController extends \app\core\Controller
             else 
             {
                 $this->register();
-                $this->session->write('success', 'un mail de confirmation à été envoyé pour valider votre compte');
                 header( 'Location: /login');
                 exit;
             }
@@ -83,8 +83,8 @@ class RegisterController extends \app\core\Controller
 
     /**
      * Register user in database
-     * Send email content url confirmation login
-     * @return View
+     * Send email content url confirmation account
+     * @return View 
      */
     private function register() 
     {
@@ -94,24 +94,24 @@ class RegisterController extends \app\core\Controller
         $params = [
             ':username' => $this->username,
             ':email'    => $this->email,
-            ':passw' => $hash,
+            ':passw'    => $hash,
             ':token'    => $token
         ];
         
         $user = $this->DB->add("INSERT INTO users (username, email, passw, token) VALUES (:username, :email, :passw, :token)", $params);
-        
-        $message = "Bonjour, afin d'initialiser votre compte merci de cliquer sur le lien suivant : \n\nhttp://192.168.100.100:8000/register/confirm_token/$user/$token";
 
-        echo '<br>'.$message.'</br>'; // pour essai
-        
-        //$mail = new Mail("devphp@mailinator.com", "Confirmation de votre compte", $message);
+        $this->sendEmail( "Bonjour, afin d'initialiser votre compte merci de cliquer sur le lien suivant : \n\nhttp://192.168.100.100:8000/register/confirm_token/$user/$token" );
+
+        $this->session->write('success', 'un mail de confirmation à été envoyé pour valider votre compte : '. $message);
     }
 
     /**
      * Receive link connetion from user
+     * @param int $id
+     * @param string $token
      * @return View
      */
-    public function confirm_token($id, $token) 
+    public function confirm_token(int $id, string $token) 
     {
         $this->id = $id;
         $this->token = $token;

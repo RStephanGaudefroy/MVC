@@ -24,20 +24,24 @@ class ForgotPasswordController extends \app\core\Controller
 
     /**
      * return view Register
+     * @return View
      */
     public function index() 
     {        
+        $this->generateCsrfToken();
         $this->view( 'auth/forgotPassword' );
     }
 
     /**
-     * 
+     * Method for verify data post from form forgotPassword
+     * @return View 
      */
     public function postForgotPassword()
     {
         if ($_POST)
         {
             $this->init();
+            $verifCsrf = $this->verifyCsrfToken();
             
             $rules = USER::getRules();
 
@@ -48,7 +52,7 @@ class ForgotPasswordController extends \app\core\Controller
 
             if (!empty($errors)) 
             {
-                // pass by session for send at view this errors
+                $this->session->write('errors', $errors);
                 header( 'Location: /forgotPassword');
             }
             else
@@ -56,8 +60,15 @@ class ForgotPasswordController extends \app\core\Controller
                 $params = [ $this->email ];
                 $user = App::getDB()->request( "SELECT * FROM users WHERE email = ?", $params );
             
-                if ($user)
-                    $this->forgotPassword();    
+                if ($user) 
+                {
+                    $this->forgotPassword();   
+                }
+                else 
+                {
+                    $this->session->write('errors', 'Aucun compte ne correspond à cet email');
+                    header( 'Location: /forgotPassword');   
+                }
             }
         }
         else
@@ -75,11 +86,9 @@ class ForgotPasswordController extends \app\core\Controller
         $params = ['email'    => $this->email, 'token'    => $token];
         $req = $this->DB->add('UPDATE users SET token = ? WHERE email = ?', [$params]); 
 
-        $message = "Bonjour, afin d'initialiser votre compte merci de cliquer sur le lien suivant : \n\nhttp://192.168.100.100:8000/forgotPassword/confirm_token/{$token}";
+        $message = "Bonjour, afin de reinitialiser votre compte merci de cliquer sur le lien suivant : \n\nhttp://192.168.100.100:8000/forgotPassword/confirm_token/{$token}";
 
-        echo '<br>'.$message.'</br>'; // pour essai
-        
-        //$mail = new Mail("devphp@mailinator.com", "Confirmation de votre compte", $message);
+        $this->sendEmail($message);
 
         header( 'Location: /forgotPassword');
         exit;
@@ -87,11 +96,11 @@ class ForgotPasswordController extends \app\core\Controller
 
     /**
      * Receive link connetion from user
+     * And validate csrf token
      * @return View
      */
-    private function confirm_token($id, $token) 
+    private function confirm_token(string $token) 
     {
-        $this->id = $id;
         $this->token = $token;
         
         $verif = $this->validTokenByUser();

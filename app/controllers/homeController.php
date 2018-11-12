@@ -8,7 +8,7 @@ class HomeController extends \app\core\Controller
   {
     if ( ( $this->session->read('auth') != null ) )
       {
-          $this->view( 'home' );
+          $this->view( 'home/home' );
       }
       else 
       {

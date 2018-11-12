@@ -9,7 +9,7 @@ class Router
     private $params = [];
     
     private $maps = [
-        'home' => 'home',
+        //'home' => 'home',
         'register' => 'authController', 
         'login'=> 'authController', 
         'forgotPassword'=> 'authController',
@@ -26,9 +26,11 @@ class Router
         
         foreach ( $this->maps as $key => $value )
         {
-            echo '<br>'. $key . $value.'<br>';
             if ($route[0] === $key)
-                $this->directory = $value . '/';
+            {
+                echo '<br>'. $key . $value.'<br>';
+                    $this->directory = $value . '/';
+            }
         }
         
         //echo '<br>le repertoire : '. $this->directory;
@@ -50,8 +52,8 @@ class Router
             }
         }
 
-        echo '<br>method : '. $this->method.'<br>';
-        echo  '<br>controller : '.$this->controller.'</br>';
+        //echo '<br>method : '. $this->method.'<br>';
+        //echo  '<br>controller : '.$this->controller.'</br>';
         $this->controller = new $this->controller;
     
         $this->params = $route ? array_values( $route ) : [];

@@ -6,7 +6,7 @@
  * Use mail php function
  */
 
-namespace Core;
+namespace app\core;
 
 class Mail
 {

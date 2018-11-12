@@ -6,6 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Architecture MVC</title>
         <link rel="stylesheet" href= "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+        <link rel="stylesheet" href= "/assets/css/style.css">
     </head>
     <body>
         <nav class="navbar navbar-dark bg-success">
@@ -35,4 +36,10 @@
                 var_dump($_SESSION['success'] );
                 unset( $_SESSION['success'] );
             }
+            if (isset ( $_SESSION['errors']) )
+            {
+                var_dump($_SESSION['errors'] );
+                unset( $_SESSION['errors'] );
+            }
+            
         ?>
