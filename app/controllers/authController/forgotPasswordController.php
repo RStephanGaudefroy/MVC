@@ -53,7 +53,8 @@ class ForgotPasswordController extends \app\core\Controller
             if (!empty($errors)) 
             {
                 $this->session->write('errors', $errors);
-                header( 'Location: /forgotPassword');
+                $this->redirect( '/forgotPassword' );
+                //header( 'Location: /forgotPassword');
             }
             else
             {
@@ -67,13 +68,15 @@ class ForgotPasswordController extends \app\core\Controller
                 else 
                 {
                     $this->session->write('errors', 'Aucun compte ne correspond à cet email');
-                    header( 'Location: /forgotPassword');   
+                    //header( 'Location: /forgotPassword');
+                    $this->redirect( '/forgotPassword' );   
                 }
             }
         }
         else
         {
-            header( 'Location: /forgotPassword');
+            //header( 'Location: /forgotPassword');
+            $this->redirect( '/forgotPassword' );
         }
     }
 
@@ -90,8 +93,9 @@ class ForgotPasswordController extends \app\core\Controller
 
         $this->sendEmail($message);
 
-        header( 'Location: /forgotPassword');
-        exit;
+        //header( 'Location: /forgotPassword');
+        $this->redirect( '/forgotPassword' );
+        //exit;
     }
 
     /**
@@ -105,6 +109,6 @@ class ForgotPasswordController extends \app\core\Controller
         
         $verif = $this->validTokenByUser();
         
-        $verif == true ? header( 'Location: /home') : header( 'Location: /login');
+        $verif == true ? $this->redirect( '/home' ) : $this->redirect( '/login' );
     }
 }

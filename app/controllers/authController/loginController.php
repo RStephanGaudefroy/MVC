@@ -50,7 +50,10 @@ class LoginController extends \app\core\Controller
         if ($_POST)
         {
             $this->init();
+            
             $verifCsrf = $this->verifyCsrfToken();
+            if ( !$verifCsrf )
+                exit();
             
             $rules = USER::getRules();
             
@@ -65,24 +68,25 @@ class LoginController extends \app\core\Controller
             if (!empty($errors)) 
             {
                 $this->session->write('errors', $errors);
-                header( 'Location: /login');
+                //header( 'Location: /login');
+                $this->redirect( '/login' );
             }
             else 
             {
                 $verifyUser = $this->login();
                 if ( $verifyUser)
                 {
-                    header( 'Location: /home');
+                    $this->redirect( '/home' );
                 }
                 else 
                 {
-                    header( 'Location: /login');
+                    $this->redirect( '/login' );
                 }
             }
         }
         else
         {
-            header( 'Location: /login');
+            $this->redirect( '/login' );
         }
     }
 

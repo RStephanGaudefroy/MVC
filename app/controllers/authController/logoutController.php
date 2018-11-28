@@ -10,6 +10,7 @@ class LogoutController extends \app\core\Controller
     public function index()
     {
         $this->session->delete('auth');
-        header( 'Location: /login');
+        $this->redirect( '/login' );
+        //header( 'Location: /login');
     }
 }

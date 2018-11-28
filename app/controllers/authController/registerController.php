@@ -49,8 +49,11 @@ class RegisterController extends \app\core\Controller
         if ($_POST)
         {
             $this->init();
+            
             $verifCsrf = $this->verifyCsrfToken();
-        
+            if ( !$verifCsrf )
+                exit();
+
             $rules = USER::getRules();
 
             $array_val = [
@@ -66,25 +69,27 @@ class RegisterController extends \app\core\Controller
             if (!empty($errors)) 
             {
                 $this->session->write('errors', $errors);
-                header( 'Location: /register');
+                $this->redirect( '/register' );
+                //header( 'Location: /register');
             }
             else 
             {
                 $this->register();
-                header( 'Location: /login');
+                $this->redirect( '/login' );
+                // header( 'Location: /login');
                 exit;
             }
         }
         else
         {
-            header( 'Location: /register');;
+            $this->redirect( '/register' );
+            //header( 'Location: /register');;
         }
     }
 
     /**
      * Register user in database
      * Send email content url confirmation account
-     * @return View 
      */
     private function register() 
     {
@@ -118,6 +123,6 @@ class RegisterController extends \app\core\Controller
         
         $verif = $this->validTokenByUser();
         
-        $verif == true ? header( 'Location: /home') : header( 'Location: /login');
+        $verif == true ? $this->redirect( '/home' ) : $this->redirect( '/login' );
     }
 }

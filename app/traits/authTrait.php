@@ -13,7 +13,6 @@ trait authTrait
     public function sendEmail(string $message)
     {
         $mail = new Mail($this->email, "Confirmation de votre compte", $message);
-        
     }
     
     /**

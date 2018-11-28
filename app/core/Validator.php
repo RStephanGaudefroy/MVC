@@ -18,13 +18,17 @@ class Validator
     public function validate():array
     {
         
+        // Read data from post form
         foreach ($this->data as $dataKey => $dataValue)
         {
+            // Read rules from model
             foreach ($this->rules as $ruleKey => $ruleValue)
             {
                 if ( $dataKey === $ruleKey)
                 {
                     $r = explode('|', $ruleValue);
+                    
+                    //call method for valdate data
                     foreach ($r as $method)
                     {
                         //print_r($dataKey .' : '. $method . ' : ' . $dataValue . '</br>');
@@ -38,7 +42,7 @@ class Validator
     }
 
     /**
-     * 
+     * Add errors in array Errors
      */
     private function setErrors(string $key, string $message)
     {
@@ -46,7 +50,7 @@ class Validator
     }
 
     /**
-     * 
+     * Function required
      */
     private function required($key, $data)
     {
@@ -55,7 +59,7 @@ class Validator
     }
 
     /**
-     * 
+     * Function is string
      */
     private function isString($key, $data)
     {
@@ -64,7 +68,7 @@ class Validator
     }
 
     /**
-     * 
+     * Function validate email
      */
     private function email($key, $data)
     {
